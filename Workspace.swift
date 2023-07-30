@@ -2,8 +2,14 @@ import ProjectDescription
 import ProjectDescriptionHelpers
 
 private let modules: [String] = [
-//    "Module1",
-//    "Module2",
+    "DoForestApp",
+    "DoForestLogin",
+    "DoForestMain",
+    "DoForestRoom",
+    "DoForestSetting",
+    "DoForestCore",
+    "DoForestUI",
+    "DoForestNetwork"
 ]
 
 private let projects: [Path] = modules.map { "Projects/\($0)" }
