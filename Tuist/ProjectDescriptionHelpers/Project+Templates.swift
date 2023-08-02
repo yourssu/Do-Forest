@@ -7,8 +7,8 @@ import ProjectDescription
 ///
 ///
 
-public let projectName: String = "MyProjectName"
-public let organization: String = "com.myOrganization"
+public let projectName: String = "DoForest"
+public let organization: String = "com.yourssu"
 
 private let infoPlist: [String: InfoPlist.Value] = [
     "CFBundleShortVersionString": "1.0",
