@@ -1,6 +1,6 @@
 import Foundation
 
-public struct RoomModel: Equatable {
+public struct RoomModel: Equatable, Identifiable {
     public let id: UUID
     public let title: String
     public let subTitle: String

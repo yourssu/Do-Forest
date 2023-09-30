@@ -12,7 +12,7 @@ public struct ProjectEnvironment {
 public let env = ProjectEnvironment(
     name: "DoForest",
     organizationName: "com.yourssu",
-    deploymentTarget: .iOS(targetVersion: "16.0", devices: [.iphone, .ipad]),
+    deploymentTarget: .iOS(targetVersion: "17.0", devices: [.iphone, .ipad]),
     platform: .iOS,
     baseSetting: [:]
 )
