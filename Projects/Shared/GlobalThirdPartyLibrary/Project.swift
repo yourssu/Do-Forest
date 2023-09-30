@@ -5,6 +5,8 @@ import ProjectDescriptionHelpers
 let project = Project.module(
     name: ModulePaths.Shared.GlobalThirdPartyLibrary.rawValue,
     targets: [
-        .implements(module: .shared(.GlobalThirdPartyLibrary), product: .framework, dependencies: [])
+        .implements(module: .shared(.GlobalThirdPartyLibrary), product: .framework, dependencies: [
+            .SPM.TCA
+        ])
     ]
 )

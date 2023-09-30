@@ -5,6 +5,7 @@ let dependencies = Dependencies(
     carthage: nil,
     swiftPackageManager: SwiftPackageManagerDependencies(
         [
+            .remote(url: "https://github.com/pointfreeco/swift-composable-architecture.git", requirement: .exact("1.2.0")),
     
         ],
         baseSettings: .settings(

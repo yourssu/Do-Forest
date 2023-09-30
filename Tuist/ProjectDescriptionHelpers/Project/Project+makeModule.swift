@@ -1,5 +1,3 @@
-import ConfigurationPlugin
-import DependencyPlugin
 import EnvironmentPlugin
 import Foundation
 import ProjectDescription

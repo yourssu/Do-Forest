@@ -1,4 +1,3 @@
-import ConfigurationPlugin
 import Foundation
 import ProjectDescription
 

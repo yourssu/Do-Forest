@@ -34,7 +34,7 @@ public extension Target {
 public extension Target {
     static func implements(
         module: ModulePaths,
-        product: Product = .staticLibrary,
+        product: Product = .framework,
         spec: TargetSpec
     ) -> Target {
         spec.with {
@@ -45,7 +45,7 @@ public extension Target {
 
     static func implements(
         module: ModulePaths,
-        product: Product = .staticLibrary,
+        product: Product = .framework,
         dependencies: [TargetDependency] = []
     ) -> Target {
         TargetSpec(sources: .sources, dependencies: dependencies)
@@ -54,7 +54,7 @@ public extension Target {
 
     static func implements(
         name: String,
-        product: Product = .staticLibrary,
+        product: Product = .framework,
         spec: TargetSpec
     ) -> Target {
         spec.with {
@@ -65,7 +65,7 @@ public extension Target {
 
     static func implements(
         name: String,
-        product: Product = .staticLibrary,
+        product: Product = .framework,
         dependencies: [TargetDependency] = []
     ) -> Target {
         TargetSpec(sources: .sources, dependencies: dependencies)
