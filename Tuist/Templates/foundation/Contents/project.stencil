@@ -1,4 +1,0 @@
-import ProjectDescription
-import ProjectDescriptionHelpers
-
-let project = Project.foundation(name: "{{ name }}", platform: .{{ platform }}, additionalDependency: [], additionalInterfaceDependency: [])
