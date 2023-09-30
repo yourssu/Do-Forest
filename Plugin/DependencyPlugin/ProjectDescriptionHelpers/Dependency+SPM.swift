@@ -5,6 +5,7 @@ public extension TargetDependency {
 }
 
 public extension TargetDependency.SPM {
+    static let YDS = TargetDependency.external(name: "YDS-SwiftUI")
     static let TCA = TargetDependency.external(name: "ComposableArchitecture")
 }
 
