@@ -193,38 +193,80 @@ public struct HomeView: View {
 
 public struct EnterRoom: Reducer {
     public init() {}
-    public struct State: Equatable {
+    public struct State: Codable, Equatable, Hashable {
         public init() {}
         @BindingState var text = ""
     }
     public enum Action: BindableAction, Equatable {
         case binding(BindingAction<State>)
         case submitButtonTapped
+        case navigateToCustomRoom
     }
+    @Dependency(\.continuousClock) var clock
+
+    private enum CancelID { case load }
 
     public var body: some Reducer<State, Action> {
         BindingReducer()
         Reduce { state, action in
             switch action {
             case .binding:
-                return .none
+                return .cancel(id: CancelID.load)
             case .submitButtonTapped:
                 print("text: \(state.text)")
+                return .none
+//                return .run { send in
+//                    try await self.clock.sleep(for: .seconds(1))
+//                    await send(.navigateToCustomRoom)
+//                }
+//                .cancellable(id: CancelID.load)
+            case .navigateToCustomRoom:
+                print("navigate To Custom Room!!")
                 return .none
             }
         }
     }
 }
 
+public struct CustomRoom: Reducer {
+    public init() {}
+    public struct State: Codable, Equatable, Hashable {
+        public init() {}
+        var text: String = ""
+    }
+    public enum Action: Equatable {
+        case buttonTapped
+    }
+
+    public func reduce(into state: inout State, action: Action) -> Effect<Action> {
+        switch action {
+        case .buttonTapped:
+            return .none
+        }
+    }
+}
+
+public struct CustomRoomView: View {
+    public init(store: StoreOf<CustomRoom>) {
+        self.store = store
+    }
+    public let store: StoreOf<CustomRoom>
+    public var body: some View {
+        WithViewStore(self.store, observe: { $0 }) { viewStore in
+            Text("\(viewStore.text)")
+        }
+    }
+}
+
 public struct Home: Reducer {
     public init() {}
-    public struct State: Equatable {
+    public struct State: Codable, Equatable, Hashable {
         public init() {}
         var rooms: [RoomModel] = RoomModel.mockData
         var settingIconAnimation = AnimationValue()
         var floatingButtonAnimation = AnimationValue()
-        var isPopupPresenting: Bool = true
-        var isEntering: Bool = true
+        var isPopupPresenting: Bool = false
+        var isEntering: Bool = false
         var enterRoom = EnterRoom.State()
     }
     public enum Action: Equatable {
@@ -258,16 +300,18 @@ public struct Home: Reducer {
             case .enterCodeButtonTapped:
                 state.isEntering = true
                 return .none
-            case .enterRoom(_):
+            case .enterRoom:
                 return .none
             }
         }
     }
 }
 
-public struct AnimationValue: Equatable {
+public struct AnimationValue: Equatable, Hashable, Codable {
     public init() {}
-    private enum Phase {
+    public init(from decoder: Decoder) throws {}
+    public func encode(to encoder: Encoder) throws {}
+    private enum Phase: String {
         case phase1
         case phase2
     }

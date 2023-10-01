@@ -14,11 +14,10 @@ struct DoForestApp: App {
     var body: some Scene {
         WindowGroup {
             NavigationStack {
-                HomeView(store: .init(initialState: Home.State(), reducer: {
-                    Home()
+                RootView(store: .init(initialState: Root.State(), reducer: {
+                    Root()
                 }))
             }
-            .zIndex(1.0)
         }
     }
 }
