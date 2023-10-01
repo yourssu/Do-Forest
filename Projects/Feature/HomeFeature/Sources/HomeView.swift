@@ -18,134 +18,7 @@ public struct HomeView: View {
         self.store = store
     }
     public let store: StoreOf<Home>
-    private func roomListView(rooms: [RoomModel]) -> some View {
-        LazyVStack(alignment: .leading, spacing: 20) {
-            ForEach(rooms, id: \.id) { room in
-                HStack(spacing: 16) {
-                    Text(room.icon)
-                        .font(.largeTitle)
-                        .frame(minWidth: 64, minHeight: 64)
-                        .background {
-                            Color.white
-                                .clipShape(Circle())
-                        }
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text(room.title)
-                            .font(YDSFont.title3)
-                        Text(room.subTitle)
-                            .font(YDSFont.body2)
-                    }
-                    Spacer()
-                }
-                .foregroundStyle(Color.white)
-                .padding(26)
-                .frame(maxWidth: .infinity, minHeight: 107)
-                .background {
-                    RoundedRectangle(cornerRadius: 30, style: .continuous)
-                        .fill(Color(hex: room.backgroundHexColor))
-                }
-            }
-        }
-    }
-    private func popupEntry(viewStore: ViewStoreOf<Home>) -> some View {
-        VStack(spacing: 16) {
-            Text("🌱")
-                .font(.system(size: 80))
-            Group {
-                Button(action: {
-                    viewStore.send(.enterCodeButtonTapped)
-                }, label: {
-                    Text("코드 입력")
-                        .frame(maxWidth: .infinity, maxHeight: 40)
-                        .foregroundStyle(Color(hex: 0x2C5F2D))
-                })
-                .tint(Color(hex: 0x93CD99, alpha: 100))
-                Button(action: {}, label: {
-                    Text("방 개설하기")
-                        .frame(maxWidth: .infinity, maxHeight: 40)
-                })
-                .foregroundStyle(Color(hex: 0xFFFFFF))
-                .tint(Color(hex: 0x2C5F2D, alpha: 100))
-            }
-            .buttonStyle(.bordered)
-            .buttonBorderShape(.capsule)
-        }
-    }
-    @MainActor
-    private func popupEnterCode(store: StoreOf<EnterRoom>) -> some View {
-        WithViewStore(store, observe: { $0 }) { viewStore in
-            VStack(spacing: 16) {
-                TextField("코드를 입력해주세요.", text: viewStore.$text)
-                    .frame(maxWidth: .infinity, maxHeight: 40)
-                    .padding(.vertical, 8)
-                    .padding(.horizontal, 20)
-                    .background {
-                        Rectangle()
-                            .foregroundColor(.clear)
-                            .background(Color(hex: 0xE4E2E2))
-                            .cornerRadius(60)
-                    }
-                Button(action: {
-                    viewStore.send(.submitButtonTapped)
-                }, label: {
-                    Text("방 입장하기")
-                        .frame(maxWidth: .infinity, maxHeight: 40)
-                })
-                .foregroundStyle(Color(hex: 0xFFFFFF))
-                .tint(Color(hex: 0x2C5F2D, alpha: 100))
-                .buttonStyle(.bordered)
-                .buttonBorderShape(.capsule)
-            }
-        }
-    }
-    @MainActor
-    private func popupWindow(viewStore: ViewStoreOf<Home>) -> some View {
-        ZStack {
-            Color.black.opacity(0.5)
-                .onTapGesture {
-                    viewStore.send(.closeButtonTapped)
-                }
-                .ignoresSafeArea()
-            VStack {
-                Spacer()
-                VStack(spacing: 16) {
-                    HStack {
-                        Spacer()
-                        Button(action: {
-                            viewStore.send(.closeButtonTapped)
-                        }, label: {
-                            Image(systemName: "xmark")
-                                .frame(maxWidth: 16, maxHeight: 16)
-                                .padding(8)
-                                .contentShape(Circle())
-                                .foregroundStyle(Color(hex: 0x3C3C43, alpha: 0.6))
-                        })
-                    }
-                    Text("방 참여하기")
-                        .font(YDSFont.title1)
-                    Text("챌린지 방에 참가하여\n나만의 잔디를 심어보세요!")
-                        .multilineTextAlignment(.center)
-                        .font(YDSFont.body1)
-                    if viewStore.isEntering {
-                        popupEnterCode(store: self.store.scope(state: \.enterRoom, action: Home.Action.enterRoom))
-                            .transition(.opacity)
-                    } else {
-                        popupEntry(viewStore: viewStore)
-                            .transition(.opacity)
-                    }
-                }
-                .padding(18)
-                .frame(maxWidth: .infinity)
-                .background {
-                    RoundedRectangle(cornerRadius: 35.0, style: .continuous)
-                        .fill(Color.white)
-                }
-                .padding(.horizontal, 40)
-                Spacer()
-            }
-            .ignoresSafeArea(edges: .top)
-        }
-    }
+
     public var body: some View {
         WithViewStore(self.store, observe: { $0 }) { viewStore in
             ZStack(alignment: .bottomTrailing) {
@@ -189,139 +62,143 @@ public struct HomeView: View {
             .animation(.easeInOut, value: viewStore.isEntering)
         }
     }
-}
 
-public struct EnterRoom: Reducer {
-    public init() {}
-    public struct State: Codable, Equatable, Hashable {
-        public init() {}
-        @BindingState var text = ""
-    }
-    public enum Action: BindableAction, Equatable {
-        case binding(BindingAction<State>)
-        case submitButtonTapped
-        case navigateToCustomRoom
-    }
-    @Dependency(\.continuousClock) var clock
-
-    private enum CancelID { case load }
-
-    public var body: some Reducer<State, Action> {
-        BindingReducer()
-        Reduce { state, action in
-            switch action {
-            case .binding:
-                return .cancel(id: CancelID.load)
-            case .submitButtonTapped:
-                print("text: \(state.text)")
-                return .none
-//                return .run { send in
-//                    try await self.clock.sleep(for: .seconds(1))
-//                    await send(.navigateToCustomRoom)
-//                }
-//                .cancellable(id: CancelID.load)
-            case .navigateToCustomRoom:
-                print("navigate To Custom Room!!")
-                return .none
+    @ViewBuilder
+    private func roomListView(rooms: [RoomModel]) -> some View {
+        LazyVStack(alignment: .leading, spacing: 20) {
+            ForEach(rooms, id: \.id) { room in
+                HStack(spacing: 16) {
+                    Text(room.icon)
+                        .font(.largeTitle)
+                        .frame(minWidth: 64, minHeight: 64)
+                        .background {
+                            Color.white
+                                .clipShape(Circle())
+                        }
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text(room.title)
+                            .font(YDSFont.title3)
+                        Text(room.subTitle)
+                            .font(YDSFont.body2)
+                    }
+                    Spacer()
+                }
+                .foregroundStyle(Color.white)
+                .padding(26)
+                .frame(maxWidth: .infinity, minHeight: 107)
+                .background {
+                    RoundedRectangle(cornerRadius: 30, style: .continuous)
+                        .fill(Color(hex: room.backgroundHexColor))
+                }
             }
         }
     }
-}
-
-public struct CustomRoom: Reducer {
-    public init() {}
-    public struct State: Codable, Equatable, Hashable {
-        public init() {}
-        var text: String = ""
-    }
-    public enum Action: Equatable {
-        case buttonTapped
-    }
-
-    public func reduce(into state: inout State, action: Action) -> Effect<Action> {
-        switch action {
-        case .buttonTapped:
-            return .none
+    @ViewBuilder
+    private func popupEntry(viewStore: ViewStoreOf<Home>) -> some View {
+        VStack(spacing: 16) {
+            Text("🌱")
+                .font(.system(size: 80))
+            Group {
+                Button(action: {
+                    viewStore.send(.enterCodeButtonTapped)
+                }, label: {
+                    Text("코드 입력")
+                        .frame(maxWidth: .infinity, maxHeight: 40)
+                        .foregroundStyle(Color(hex: 0x2C5F2D))
+                })
+                .tint(Color(hex: 0x93CD99, alpha: 100))
+                Button(action: {}, label: {
+                    Text("방 개설하기")
+                        .frame(maxWidth: .infinity, maxHeight: 40)
+                })
+                .foregroundStyle(Color(hex: 0xFFFFFF))
+                .tint(Color(hex: 0x2C5F2D, alpha: 100))
+            }
+            .buttonStyle(.bordered)
+            .buttonBorderShape(.capsule)
         }
     }
-}
-
-public struct CustomRoomView: View {
-    public init(store: StoreOf<CustomRoom>) {
-        self.store = store
-    }
-    public let store: StoreOf<CustomRoom>
-    public var body: some View {
-        WithViewStore(self.store, observe: { $0 }) { viewStore in
-            Text("\(viewStore.text)")
-        }
-    }
-}
-
-public struct Home: Reducer {
-    public init() {}
-    public struct State: Codable, Equatable, Hashable {
-        public init() {}
-        var rooms: [RoomModel] = RoomModel.mockData
-        var settingIconAnimation = AnimationValue()
-        var floatingButtonAnimation = AnimationValue()
-        var isPopupPresenting: Bool = false
-        var isEntering: Bool = false
-        var enterRoom = EnterRoom.State()
-    }
-    public enum Action: Equatable {
-        case buttonTapped
-        case settingButtonTapped
-        case floatingButtonTapped
-        case closeButtonTapped
-        case enterCodeButtonTapped
-        case enterRoom(EnterRoom.Action)
-    }
-
-    public var body: some Reducer<State, Action> {
-        Scope(state: \.enterRoom, action: /Action.enterRoom) {
-            EnterRoom()
-        }
-        Reduce { state, action in
-            switch action {
-            case .buttonTapped:
-                return .none
-            case .settingButtonTapped:
-                state.settingIconAnimation.trigger()
-                return .none
-            case .floatingButtonTapped:
-                state.floatingButtonAnimation.trigger()
-                state.isPopupPresenting = true
-                return .none
-            case .closeButtonTapped:
-                state.isPopupPresenting = false
-                state.isEntering = false
-                return .none
-            case .enterCodeButtonTapped:
-                state.isEntering = true
-                return .none
-            case .enterRoom:
-                return .none
+    @ViewBuilder @MainActor
+    private func popupEnterCode(store: StoreOf<EnterRoom>) -> some View {
+        WithViewStore(store, observe: { $0 }) { viewStore in
+            VStack(spacing: 16) {
+                TextField("코드를 입력해주세요.", text: viewStore.$text)
+                    .frame(maxWidth: .infinity, maxHeight: 40)
+                    .padding(.vertical, 8)
+                    .padding(.horizontal, 20)
+                    .background {
+                        Rectangle()
+                            .foregroundColor(.clear)
+                            .background(Color(hex: 0xE4E2E2))
+                            .cornerRadius(60)
+                    }
+                if viewStore.isActivityIndicatorVisible {
+                    ProgressView()
+                        .transition(.opacity)
+                } else {
+                    Button(action: {
+                        viewStore.send(.submitButtonTapped)
+                    }, label: {
+                        Text("방 입장하기")
+                            .frame(maxWidth: .infinity, maxHeight: 40)
+                    })
+                    .foregroundStyle(Color(hex: 0xFFFFFF))
+                    .tint(Color(hex: 0x2C5F2D, alpha: 100))
+                    .buttonStyle(.bordered)
+                    .buttonBorderShape(.capsule)
+                }
             }
         }
     }
-}
-
-public struct AnimationValue: Equatable, Hashable, Codable {
-    public init() {}
-    public init(from decoder: Decoder) throws {}
-    public func encode(to encoder: Encoder) throws {}
-    private enum Phase: String {
-        case phase1
-        case phase2
-    }
-    private var phase: Phase = .phase1
-    public mutating func trigger() {
-        switch phase {
-        case .phase1:
-            self.phase = .phase2
-        case .phase2:
-            self.phase = .phase1
+    @ViewBuilder @MainActor
+    private func popupWindow(viewStore: ViewStoreOf<Home>) -> some View {
+        ZStack {
+            Color.black.opacity(0.5)
+                .onTapGesture {
+                    viewStore.send(.closeButtonTapped)
+                }
+                .ignoresSafeArea()
+            VStack {
+                Spacer()
+                VStack(spacing: 16) {
+                    HStack {
+                        Spacer()
+                        Button(action: {
+                            viewStore.send(.closeButtonTapped)
+                        }, label: {
+                            Image(systemName: "xmark")
+                                .frame(maxWidth: 16, maxHeight: 16)
+                                .padding(8)
+                                .contentShape(Circle())
+                                .foregroundStyle(Color(hex: 0x3C3C43, alpha: 0.6))
+                        })
+                    }
+                    Text("방 참여하기")
+                        .font(YDSFont.title1)
+                    Text("챌린지 방에 참가하여\n나만의 잔디를 심어보세요!")
+                        .multilineTextAlignment(.center)
+                        .font(YDSFont.body1)
+                    if viewStore.isEntering {
+                        IfLetStore(self.store.scope(state: \.enterRoom, action: { .enterRoom($0) })) {
+                            popupEnterCode(store: $0)
+                        }
+                        //                        popupEnterCode(store: self.store.scope(state: \.enterRoom, action: Home.Action.enterRoom))
+                        //                            .transition(.opacity)
+                    } else {
+                        popupEntry(viewStore: viewStore)
+                            .transition(.opacity)
+                    }
+                }
+                .padding(18)
+                .frame(maxWidth: .infinity)
+                .background {
+                    RoundedRectangle(cornerRadius: 35.0, style: .continuous)
+                        .fill(Color.white)
+                }
+                .padding(.horizontal, 40)
+                Spacer()
+            }
+            .ignoresSafeArea(edges: .top)
         }
     }
 }

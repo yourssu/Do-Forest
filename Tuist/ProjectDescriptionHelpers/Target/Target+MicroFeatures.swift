@@ -9,24 +9,24 @@ public extension Target {
         spec.with {
             $0.sources = .interface
         }
-        .toTarget(with: module.targetName(type: .interface), product: .framework)
+        .toTarget(with: module.targetName(type: .interface), product: .staticLibrary)
     }
 
     static func interface(module: ModulePaths, dependencies: [TargetDependency] = []) -> Target {
         TargetSpec(sources: .interface, dependencies: dependencies)
-            .toTarget(with: module.targetName(type: .interface), product: .framework)
+            .toTarget(with: module.targetName(type: .interface), product: .staticLibrary)
     }
 
     static func interface(name: String, spec: TargetSpec) -> Target {
         spec.with {
             $0.sources = .interface
         }
-        .toTarget(with: "\(name)Interface", product: .framework)
+        .toTarget(with: "\(name)Interface", product: .staticLibrary)
     }
 
     static func interface(name: String, dependencies: [TargetDependency] = []) -> Target {
         TargetSpec(sources: .interface, dependencies: dependencies)
-            .toTarget(with: "\(name)Interface", product: .framework)
+            .toTarget(with: "\(name)Interface", product: .staticLibrary)
     }
 }
 
@@ -79,24 +79,24 @@ public extension Target {
         spec.with {
             $0.sources = .testing
         }
-        .toTarget(with: module.targetName(type: .testing), product: .framework)
+        .toTarget(with: module.targetName(type: .testing), product: .staticLibrary)
     }
 
     static func testing(module: ModulePaths, dependencies: [TargetDependency] = []) -> Target {
         TargetSpec(sources: .testing, dependencies: dependencies)
-            .toTarget(with: module.targetName(type: .testing), product: .framework)
+            .toTarget(with: module.targetName(type: .testing), product: .staticLibrary)
     }
 
     static func testing(name: String, spec: TargetSpec) -> Target {
         spec.with {
             $0.sources = .testing
         }
-        .toTarget(with: "\(name)Testing", product: .framework)
+        .toTarget(with: "\(name)Testing", product: .staticLibrary)
     }
 
     static func testing(name: String, dependencies: [TargetDependency] = []) -> Target {
         TargetSpec(sources: .testing, dependencies: dependencies)
-            .toTarget(with: "\(name)Testing", product: .framework)
+            .toTarget(with: "\(name)Testing", product: .staticLibrary)
     }
 }
 

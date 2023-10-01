@@ -53,7 +53,7 @@ func registerModuleDependency() {
     }
     if hasUnitTests {
         makeScaffold(target: .unitTest)
-        targetString += ",\n\(tab(2)).tests(module: \(moduleEnum), dependencies: [\n\(tab(3)).\(layerPrefix)(target: .\(moduleName))\n\(tab(2))])"
+        targetString += ",\n\(tab(2)).tests(module: \(moduleEnum), dependencies: [\n\(tab(3)).\(layerPrefix)(target: .\(moduleName))\n\(!hasTesting ? "" : "\(tab(3)).\(layerPrefix)(target: .\(moduleName), type: .testing)\n")\(tab(2))])"
     }
     if hasUITests {
         makeScaffold(target: .uiTest)
@@ -61,7 +61,7 @@ func registerModuleDependency() {
     }
     if hasDemo {
         makeScaffold(target: .demo)
-        targetString += ",\n\(tab(2)).demo(module: \(moduleEnum), dependencies: [\n\(tab(3)).\(layerPrefix)(target: .\(moduleName))\n\(tab(2))])"
+        targetString += ",\n\(tab(2)).demo(module: \(moduleEnum), dependencies: [\n\(tab(3)).\(layerPrefix)(target: .\(moduleName))\n\(!hasTesting ? "" : "\(tab(3)).\(layerPrefix)(target: .\(moduleName), type: .testing)\n")\(tab(2))])"
     }
     targetString += "\n\(tab(1))]"
     makeProjectSwift(targetString: targetString)

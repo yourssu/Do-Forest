@@ -8,6 +8,7 @@
 
 import SwiftUI
 import HomeFeature
+import HomeFeatureInterface
 import ComposableArchitecture
 
 @main

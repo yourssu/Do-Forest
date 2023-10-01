@@ -11,7 +11,7 @@ private let template = Template(
     ],
     items: [
         .file(
-            path: "Projects/\(layerAttribute)/\(nameAttribute)/Demo/Sources/AppDelegate.swift",
+            path: "Projects/\(layerAttribute)/\(nameAttribute)/Demo/Sources/DemoApp.swift",
             templatePath: "DemoSources.stencil"
         ),
         .file(

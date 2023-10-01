@@ -7,17 +7,15 @@
 //
 
 import SwiftUI
-import HomeFeature
+import ComposableArchitecture
 
 @main
 struct DoForestApp: App {
     var body: some Scene {
         WindowGroup {
-            NavigationStack {
-                RootView(store: .init(initialState: Root.State(), reducer: {
-                    Root()
-                }))
-            }
+            RootView(store: .init(initialState: Root.State()) {
+                Root()
+            })
         }
     }
 }
