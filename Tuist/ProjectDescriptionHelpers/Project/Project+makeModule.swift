@@ -27,7 +27,7 @@ public extension Project {
         sources: SourceFilesList = .sources,
         resources: ResourceFileElements? = nil,
         settings: SettingsDictionary = [:],
-        additionalPlistRows: [String: ProjectDescription.InfoPlist.Value] = [:],
+        additionalPlistRows: [String: ProjectDescription.Plist.Value] = [:],
         additionalFiles: [FileElement] = [],
         configurations: [Configuration] = []
     ) -> Project {

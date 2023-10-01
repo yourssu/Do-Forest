@@ -241,7 +241,7 @@ struct Bash: CommandExecuting {
     }
 
     private func resolve(_ command: String) throws -> String {
-        guard var bashCommand = try? run("/bin/bash", with: ["-l", "-c", "which \(command)"]) else {
+        guard var bashCommand = try? run("/bin/zsh", with: ["-l", "-c", "which \(command)"]) else {
             throw BashError.commandNotFound(name: command)
         }
         bashCommand = bashCommand.trimmingCharacters(in: NSCharacterSet.whitespacesAndNewlines)

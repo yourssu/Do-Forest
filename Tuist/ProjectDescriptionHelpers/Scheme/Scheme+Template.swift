@@ -1,5 +1,4 @@
 import ProjectDescription
-import ProjectDescriptionHelpers
 
 extension Scheme {
     static func makeScheme(target: ConfigurationName, name: String) -> Scheme {

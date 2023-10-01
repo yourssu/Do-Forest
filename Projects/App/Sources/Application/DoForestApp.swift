@@ -13,9 +13,12 @@ import HomeFeature
 struct DoForestApp: App {
     var body: some Scene {
         WindowGroup {
-            HomeView(store: .init(initialState: Home.State(), reducer: {
-                Home()
-            }))
+            NavigationStack {
+                HomeView(store: .init(initialState: Home.State(), reducer: {
+                    Home()
+                }))
+            }
+            .zIndex(1.0)
         }
     }
 }

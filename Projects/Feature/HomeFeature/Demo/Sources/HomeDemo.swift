@@ -8,14 +8,25 @@
 
 import SwiftUI
 import HomeFeature
+import ComposableArchitecture
 
 @main
 struct HomeDemo: App {
     var body: some Scene {
         WindowGroup {
-            HomeView(store: .init(initialState: Home.State(), reducer: {
-                Home()
-            }))
+            NavigationStack {
+                HomeView(store: .init(initialState: Home.State(), reducer: {
+                    Home()
+                }))
+            }
         }
+    }
+}
+
+#Preview {
+    NavigationStack {
+        HomeView(store: Store(initialState: Home.State(), reducer: {
+            Home()
+        }))
     }
 }
