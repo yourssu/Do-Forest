@@ -20,6 +20,7 @@ public struct Home: Reducer {
         case closeButtonTapped
         case enterCodeButtonTapped
         case enterRoom(EnterRoom.Action)
+        case createRoomButtonTapped
     }
 
     public var body: some Reducer<State, Action> {
@@ -45,6 +46,9 @@ public struct Home: Reducer {
                 return .concatenate(.run { send in
                     await send(.closeButtonTapped)
                 })
+            case .createRoomButtonTapped:
+                state.isPopupPresenting = false
+                return .none
             default:
                 return .none
             }
@@ -58,10 +62,7 @@ public struct Home: Reducer {
 public struct EnterRoom: Reducer {
     public init() {}
     public struct State: Equatable {
-        public init(text: String = "", isActivityIndicatorVisible: Bool = false) {
-            self.text = text
-            self.isActivityIndicatorVisible = isActivityIndicatorVisible
-        }
+        public init() {}
         @BindingState public var text = ""
         public var isActivityIndicatorVisible = false
     }

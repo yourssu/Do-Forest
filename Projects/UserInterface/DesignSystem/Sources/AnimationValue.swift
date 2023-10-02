@@ -12,11 +12,11 @@ public struct AnimationValue: Equatable, Hashable, Codable {
     public init() {}
     public init(from decoder: Decoder) throws {}
     public func encode(to encoder: Encoder) throws {}
-    private enum Phase: String {
+    public enum Phase: String {
         case phase1
         case phase2
     }
-    private var phase: Phase = .phase1
+    public var phase: Phase = .phase1
     public mutating func trigger() {
         switch phase {
         case .phase1:

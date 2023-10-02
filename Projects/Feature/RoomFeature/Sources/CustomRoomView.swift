@@ -11,6 +11,12 @@ public struct CustomRoomView: View {
     public var body: some View {
         WithViewStore(self.store, observe: { $0 }) { viewStore in
             Text("\(viewStore.text)")
+            Button {
+                viewStore.send(.buttonTapped)
+            } label: {
+                Text("Button!")
+            }
+
         }
     }
 }

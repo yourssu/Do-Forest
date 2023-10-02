@@ -107,7 +107,9 @@ public struct HomeView: View {
                         .foregroundStyle(Color(hex: 0x2C5F2D))
                 })
                 .tint(Color(hex: 0x93CD99, alpha: 100))
-                Button(action: {}, label: {
+                Button(action: {
+                    viewStore.send(.createRoomButtonTapped)
+                }, label: {
                     Text("방 개설하기")
                         .frame(maxWidth: .infinity, maxHeight: 40)
                 })
@@ -143,7 +145,7 @@ public struct HomeView: View {
                             .frame(maxWidth: .infinity, maxHeight: 40)
                     })
                     .foregroundStyle(Color(hex: 0xFFFFFF))
-                    .tint(Color(hex: 0x2C5F2D, alpha: 100))
+                    .tint(Color(hex: 0x2C5F2D, alpha: 10))
                     .buttonStyle(.bordered)
                     .buttonBorderShape(.capsule)
                 }

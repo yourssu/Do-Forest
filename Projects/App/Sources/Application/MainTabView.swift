@@ -14,7 +14,7 @@ import RoomFeature
 struct MainTabView: View {
     let store: StoreOf<MainTab>
     var body: some View {
-        NavigationStackStore(self.store.scope(state: \.path, action: { .path($0) })) {
+        NavigationStackStore(self.store.scope(state: \.path, action: MainTab.Action.path)) {
             HomeView(store: self.store.scope(state: \.home, action: { .home($0) }))
         } destination: { store in
             switch store {
@@ -23,6 +23,12 @@ struct MainTabView: View {
                     /MainTab.Path.State.customRoom,
                      action: MainTab.Path.Action.customRoom,
                      then: CustomRoomView.init(store:)
+                )
+            case .createRoom:
+                CaseLet(
+                    /MainTab.Path.State.createRoom,
+                     action: MainTab.Path.Action.createRoom,
+                     then: CreateRoomView.init(store:)
                 )
             }
         }

@@ -23,14 +23,19 @@ struct MainTab: Reducer {
     struct Path: Reducer {
         enum State: Equatable {
             case customRoom(CustomRoom.State = .init())
+            case createRoom(CreateRoom.State = .init())
         }
         enum Action: Equatable {
             case customRoom(CustomRoom.Action)
+            case createRoom(CreateRoom.Action)
         }
 
         var body: some Reducer<State, Action> {
             Scope(state: /State.customRoom, action: /Action.customRoom) {
                 CustomRoom()
+            }
+            Scope(state: /State.createRoom, action: /Action.createRoom) {
+                CreateRoom()
             }
         }
     }
@@ -47,6 +52,9 @@ struct MainTab: Reducer {
                 }
             case .home(.enterRoom(.navigateToCustomRoom)):
                 state.path.append(.customRoom())
+                return .none
+            case .home(.createRoomButtonTapped):
+                state.path.append(.createRoom())
                 return .none
             default:
                 return .none
