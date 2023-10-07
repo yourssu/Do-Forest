@@ -6,7 +6,7 @@ import RoomFeatureInterface
 struct HomeDemo: App {
     var body: some Scene {
         WindowGroup {
-            CustomRoomView(store: .init(initialState: CustomRoom.State(), reducer: {
+            CustomRoomView(store: .init(initialState: CustomRoom.State(roomModel: .default()), reducer: {
                 CustomRoom()
             }))
         }

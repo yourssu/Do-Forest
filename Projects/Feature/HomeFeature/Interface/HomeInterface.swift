@@ -1,31 +1,47 @@
 import ComposableArchitecture
+import Foundation
 import RoomDomainInterface
-import DesignSystem
+import Util
+import DI
 
 public struct Home: Reducer {
     public init() {}
+    @RoomDIResolver var roomUseCase: RoomUsecase
     public struct State: Equatable {
         public init() {}
-        public var rooms: [RoomModel] = RoomModel.mockData
+        public var rooms: [RoomModel]?
         public var settingIconAnimation = AnimationValue()
         public var floatingButtonAnimation = AnimationValue()
         public var isPopupPresenting: Bool = false
         public var isEntering: Bool = false
-        public var enterRoom: EnterRoom.State? = .init()
+        public var enterRoomPopup: EnterRoomPopup.State? = .init()
     }
     public enum Action: Equatable {
+        case onAppear
+        case onAppearLoadFinished([RoomModel])
         case buttonTapped
         case settingButtonTapped
         case floatingButtonTapped
         case closeButtonTapped
         case enterCodeButtonTapped
-        case enterRoom(EnterRoom.Action)
+        case enterRoomPopup(EnterRoomPopup.Action)
         case createRoomButtonTapped
+        case enterRoom(RoomModel)
     }
 
+    @Dependency(\.continuousClock) var clock
     public var body: some Reducer<State, Action> {
         Reduce { state, action in
             switch action {
+            case .onAppear:
+                return .run { send in
+                    try await self.clock.sleep(for: .seconds(1))
+                    let rooms = await roomUseCase.getRooms(uid: UUID())
+                    await send(.onAppearLoadFinished(rooms))
+                }
+            case .onAppearLoadFinished(let rooms):
+                state.rooms = rooms
+                return .none
             case .buttonTapped:
                 return .none
             case .settingButtonTapped:
@@ -42,24 +58,26 @@ public struct Home: Reducer {
             case .enterCodeButtonTapped:
                 state.isEntering = true
                 return .none
-            case .enterRoom(.loadCompleted(true)):
+            case .enterRoomPopup(.loadCompleted(true)):
                 return .concatenate(.run { send in
                     await send(.closeButtonTapped)
                 })
             case .createRoomButtonTapped:
                 state.isPopupPresenting = false
                 return .none
+            case .enterRoom:
+                return .none
             default:
                 return .none
             }
         }
-        .ifLet(\.enterRoom, action: /Action.enterRoom) {
-            EnterRoom()
+        .ifLet(\.enterRoomPopup, action: /Action.enterRoomPopup) {
+            EnterRoomPopup()
         }
     }
 }
 
-public struct EnterRoom: Reducer {
+public struct EnterRoomPopup: Reducer {
     public init() {}
     public struct State: Equatable {
         public init() {}

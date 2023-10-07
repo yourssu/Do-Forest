@@ -11,6 +11,9 @@ import ComposableArchitecture
 
 @main
 struct DoForestApp: App {
+    init() {
+        registerRoomDependency()
+    }
     var body: some Scene {
         WindowGroup {
             RootView(store: .init(initialState: Root.State()) {

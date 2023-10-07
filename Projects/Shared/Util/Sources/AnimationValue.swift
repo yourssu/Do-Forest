@@ -1,8 +1,8 @@
 //
 //  AnimationValue.swift
-//  DesignSystem
+//  Util
 //
-//  Created by 정종인 on 10/1/23.
+//  Created by 정종인 on 10/3/23.
 //  Copyright © 2023 com.yourssu. All rights reserved.
 //
 

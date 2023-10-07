@@ -23,7 +23,7 @@ public struct HomeView: View {
         WithViewStore(self.store, observe: { $0 }) { viewStore in
             ZStack(alignment: .bottomTrailing) {
                 ScrollView {
-                    roomListView(rooms: viewStore.rooms)
+                    roomListView(viewStore: viewStore)
                 }
                 .padding()
                 Button {
@@ -60,37 +60,47 @@ public struct HomeView: View {
             }
             .animation(.easeInOut, value: viewStore.isPopupPresenting)
             .animation(.easeInOut, value: viewStore.isEntering)
+            .onAppear {
+                viewStore.send(.onAppear)
+            }
         }
     }
 
     @ViewBuilder
-    private func roomListView(rooms: [RoomModel]) -> some View {
-        LazyVStack(alignment: .leading, spacing: 20) {
-            ForEach(rooms, id: \.id) { room in
-                HStack(spacing: 16) {
-                    Text(room.icon)
-                        .font(.largeTitle)
-                        .frame(minWidth: 64, minHeight: 64)
-                        .background {
-                            Color.white
-                                .clipShape(Circle())
+    private func roomListView(viewStore: ViewStoreOf<Home>) -> some View {
+        if let rooms = viewStore.rooms {
+            LazyVStack(alignment: .leading, spacing: 20) {
+                ForEach(rooms, id: \.id) { room in
+                    HStack(spacing: 16) {
+                        Text(room.icon)
+                            .font(.largeTitle)
+                            .frame(minWidth: 64, minHeight: 64)
+                            .background {
+                                Color.white
+                                    .clipShape(Circle())
+                            }
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text(room.title)
+                                .font(YDSFont.title3)
+                            Text(room.subTitle)
+                                .font(YDSFont.body2)
                         }
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text(room.title)
-                            .font(YDSFont.title3)
-                        Text(room.subTitle)
-                            .font(YDSFont.body2)
+                        Spacer()
                     }
-                    Spacer()
-                }
-                .foregroundStyle(Color.white)
-                .padding(26)
-                .frame(maxWidth: .infinity, minHeight: 107)
-                .background {
-                    RoundedRectangle(cornerRadius: 30, style: .continuous)
-                        .fill(Color(hex: room.backgroundHexColor))
+                    .foregroundStyle(Color.white)
+                    .padding(26)
+                    .frame(maxWidth: .infinity, minHeight: 107)
+                    .background {
+                        RoundedRectangle(cornerRadius: 30, style: .continuous)
+                            .fill(Color(hex: room.backgroundHexColor))
+                    }
+                    .onTapGesture {
+                        viewStore.send(.enterRoom(room))
+                    }
                 }
             }
+        } else {
+            ProgressView()
         }
     }
     @ViewBuilder
@@ -121,7 +131,7 @@ public struct HomeView: View {
         }
     }
     @ViewBuilder @MainActor
-    private func popupEnterCode(store: StoreOf<EnterRoom>) -> some View {
+    private func popupEnterCode(store: StoreOf<EnterRoomPopup>) -> some View {
         WithViewStore(store, observe: { $0 }) { viewStore in
             VStack(spacing: 16) {
                 TextField("코드를 입력해주세요.", text: viewStore.$text)
@@ -181,11 +191,9 @@ public struct HomeView: View {
                         .multilineTextAlignment(.center)
                         .font(YDSFont.body1)
                     if viewStore.isEntering {
-                        IfLetStore(self.store.scope(state: \.enterRoom, action: { .enterRoom($0) })) {
+                        IfLetStore(self.store.scope(state: \.enterRoomPopup, action: { .enterRoomPopup($0) })) {
                             popupEnterCode(store: $0)
                         }
-                        //                        popupEnterCode(store: self.store.scope(state: \.enterRoom, action: Home.Action.enterRoom))
-                        //                            .transition(.opacity)
                     } else {
                         popupEntry(viewStore: viewStore)
                             .transition(.opacity)

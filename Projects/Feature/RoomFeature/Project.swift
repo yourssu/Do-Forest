@@ -8,7 +8,8 @@ let project = Project.module(
         .interface(module: .feature(.RoomFeature), dependencies: [
             .shared(target: .GlobalThirdPartyLibrary),
             .domain(target: .RoomDomain, type: .interface),
-            .shared(target: .Util)
+            .shared(target: .Util),
+            .shared(target: .DI)
         ]),
         .implements(module: .feature(.RoomFeature), dependencies: [
             .feature(target: .RoomFeature, type: .interface),

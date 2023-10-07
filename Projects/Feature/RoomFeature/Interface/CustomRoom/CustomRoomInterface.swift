@@ -1,9 +1,12 @@
 import ComposableArchitecture
+import RoomDomainInterface
 public struct CustomRoom: Reducer {
     public init() {}
     public struct State: Equatable {
-        public init() {}
-        public var text: String = "Cutom Room 화면입니다."
+        public init(roomModel: RoomModel) {
+            self.roomModel = roomModel
+        }
+        public var roomModel: RoomModel
     }
     public enum Action: Equatable {
         case buttonTapped

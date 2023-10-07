@@ -9,3 +9,4 @@ final class RoomFeatureTests: XCTestCase {
         XCTAssertEqual(1, 1)
     }
 }
+

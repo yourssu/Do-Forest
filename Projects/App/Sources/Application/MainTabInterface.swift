@@ -22,7 +22,7 @@ struct MainTab: Reducer {
     }
     struct Path: Reducer {
         enum State: Equatable {
-            case customRoom(CustomRoom.State = .init())
+            case customRoom(CustomRoom.State = .init(roomModel: .default()))
             case createRoom(CreateRoom.State = .init())
         }
         enum Action: Equatable {
@@ -50,8 +50,11 @@ struct MainTab: Reducer {
                 default:
                     return .none
                 }
-            case .home(.enterRoom(.navigateToCustomRoom)):
+            case .home(.enterRoomPopup(.navigateToCustomRoom)):
                 state.path.append(.customRoom())
+                return .none
+            case .home(.enterRoom(let roomModel)):
+                state.path.append(.customRoom(.init(roomModel: roomModel)))
                 return .none
             case .home(.createRoomButtonTapped):
                 state.path.append(.createRoom())
