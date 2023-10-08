@@ -3,6 +3,7 @@ import ComposableArchitecture
 import YDS_SwiftUI
 import RoomFeatureInterface
 import RoomDomainInterface
+import DesignSystem
 
 public struct CustomRoomView: View {
     public init(store: StoreOf<CustomRoom>) {
@@ -26,7 +27,9 @@ public struct CustomRoomView: View {
             }
             .toolbarBackground(Color(hex: viewStore.roomModel.backgroundHexColor), for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
+            .addBackButton()
             .navigationTitle(viewStore.roomModel.title)
+            .navigationBarTitleDisplayMode(.large)
             .onAppear {
                 viewStore.send(.loadParticipants)
             }
