@@ -9,9 +9,11 @@
 import SwiftUI
 import RoomFeature
 import RoomFeatureInterface
+import RoomFeatureTesting
 
 #Preview {
-    CustomRoomView(store: .init(initialState: CustomRoom.State(roomModel: .default()), reducer: {
+    registerRoomTestDependency()
+    return CustomRoomView(store: .init(initialState: CustomRoom.State(roomModel: .default()), reducer: {
         CustomRoom()
     }))
 }

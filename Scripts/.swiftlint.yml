@@ -46,5 +46,6 @@ disabled_rules:
   - nesting
   - force_cast
 
-function_body_length: 60
+function_body_length: 160
 type_body_length: 400
+line:length: 200

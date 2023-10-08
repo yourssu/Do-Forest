@@ -9,6 +9,6 @@
 import Foundation
 
 public protocol RoomUsecase {
-    func getRooms(uid: UUID) async -> [RoomModel]
-    func getParticipants(roomID: UUID) async -> [ParticipantModel]
+    func getRooms(uid: UUID) async throws -> [RoomModel]
+    func getParticipants(roomID: UUID) async throws -> [ParticipantModel]
 }

@@ -17,9 +17,8 @@ public struct Home: Reducer {
         public var enterRoomPopup: EnterRoomPopup.State? = .init()
     }
     public enum Action: Equatable {
-        case onAppear
-        case onAppearLoadFinished([RoomModel])
-        case buttonTapped
+        case loadRooms
+        case loadRoomsFinished([RoomModel])
         case settingButtonTapped
         case floatingButtonTapped
         case closeButtonTapped
@@ -29,32 +28,34 @@ public struct Home: Reducer {
         case enterRoom(RoomModel)
     }
 
-    @Dependency(\.continuousClock) var clock
     public var body: some Reducer<State, Action> {
         Reduce { state, action in
             switch action {
-            case .onAppear:
+            case .loadRooms:
                 return .run { send in
-                    try await self.clock.sleep(for: .seconds(1))
-                    let rooms = await roomUseCase.getRooms(uid: UUID())
-                    await send(.onAppearLoadFinished(rooms))
+                    let rooms = try await roomUseCase.getRooms(uid: UUID())
+                    await send(.loadRoomsFinished(rooms), animation: .bouncy)
                 }
-            case .onAppearLoadFinished(let rooms):
+            case .loadRoomsFinished(let rooms):
+                if state.rooms != rooms {
+                    hapticNotification(.success)
+                }
                 state.rooms = rooms
-                return .none
-            case .buttonTapped:
                 return .none
             case .settingButtonTapped:
                 state.settingIconAnimation.trigger()
                 return .none
             case .floatingButtonTapped:
+                hapticImpact(.soft)
                 state.floatingButtonAnimation.trigger()
                 state.isPopupPresenting = true
                 return .none
             case .closeButtonTapped:
                 state.isPopupPresenting = false
                 state.isEntering = false
-                return .none
+                return .run { send in
+                    await send(.loadRooms)
+                }
             case .enterCodeButtonTapped:
                 state.isEntering = true
                 return .none
@@ -66,6 +67,7 @@ public struct Home: Reducer {
                 state.isPopupPresenting = false
                 return .none
             case .enterRoom:
+                hapticImpact(.light)
                 return .none
             default:
                 return .none

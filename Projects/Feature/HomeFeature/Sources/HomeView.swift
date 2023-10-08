@@ -16,6 +16,7 @@ import HomeFeatureInterface
 public struct HomeView: View {
     public init(store: StoreOf<Home>) {
         self.store = store
+        store.send(.loadRooms)
     }
     public let store: StoreOf<Home>
 
@@ -43,6 +44,9 @@ public struct HomeView: View {
                         .transition(.opacity)
                 }
             }
+            .refreshable {
+                await viewStore.send(.loadRooms).finish()
+            }
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Text("함께해요")
@@ -60,9 +64,6 @@ public struct HomeView: View {
             }
             .animation(.easeInOut, value: viewStore.isPopupPresenting)
             .animation(.easeInOut, value: viewStore.isEntering)
-            .onAppear {
-                viewStore.send(.onAppear)
-            }
         }
     }
 
@@ -100,7 +101,11 @@ public struct HomeView: View {
                 }
             }
         } else {
-            ProgressView()
+            HStack {
+                Spacer()
+                ProgressView()
+                Spacer()
+            }
         }
     }
     @ViewBuilder
