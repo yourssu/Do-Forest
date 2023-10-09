@@ -24,6 +24,7 @@ extension ModulePaths: MicroTargetPathConvertable {
 
 public extension ModulePaths {
     enum Feature: String, MicroTargetPathConvertable {
+        case ProfileFeature
         case RoomFeature
         case HomeFeature
     }
@@ -31,6 +32,7 @@ public extension ModulePaths {
 
 public extension ModulePaths {
     enum Domain: String, MicroTargetPathConvertable {
+        case ProfileDomain
         case RoomDomain
     }
 }
