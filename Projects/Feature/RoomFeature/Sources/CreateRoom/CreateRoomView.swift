@@ -42,20 +42,20 @@ public struct CreateRoomView: View {
                             viewStore.send(.previousButtonTapped, animation: .default)
                         }, label: {
                             Text("이전")
-                                .frame(maxWidth: 96, maxHeight: 48)
+                                .frame(maxWidth: 96, minHeight: 48)
                         })
-                        .buttonStyle(.bordered)
-                        .tint(Color(hex: 0x2A943D, alpha: 3.5))
+                        .background(Color.buttonPoint)
+                        .clipShape(.buttonBorder)
                     }
                     if viewStore.nextButtonEnabled {
                         Button(action: {
                             viewStore.send(.nextButtonTapped, animation: .default)
                         }, label: {
                             Text(viewStore.phase == .ending ? "완료" : viewStore.phase == .setTimeRange ? "방 개설하기" : "다음")
-                                .frame(maxWidth: .infinity, maxHeight: 48)
+                                .frame(maxWidth: .infinity, minHeight: 48)
                         })
-                        .buttonStyle(.bordered)
-                        .tint(Color(hex: 0x2A943D, alpha: 10))
+                        .background(Color.buttonPoint)
+                        .clipShape(.buttonBorder)
                     }
                 }
                 .font(YDSFont.title2)
@@ -66,6 +66,7 @@ public struct CreateRoomView: View {
                 .bind(viewStore.$focusedField, to: self.$focusedField)
             }
         }
+        .addBackButton()
     }
 
     @ViewBuilder
@@ -90,8 +91,8 @@ public struct CreateRoomView: View {
                         .inset(by: 1)
                         .stroke(
                             viewStore.userPickedRoom == room
-                            ? Color(hex: 0x94AF9F)
-                            : Color(hex: 0xB5B9BD),
+                            ? Color.bgElevated
+                            : Color.textDisabled,
                             lineWidth: viewStore.userPickedRoom == room ? 6 : 2
                         )
                 )
@@ -117,7 +118,7 @@ public struct CreateRoomView: View {
             Rectangle()
                 .foregroundColor(.clear)
                 .frame(height: 1)
-                .background(Color(hex: 0x2A943D))
+                .background(Color.buttonPoint)
         }
         .padding(16)
         .onAppear {
@@ -137,7 +138,7 @@ public struct CreateRoomView: View {
             Rectangle()
                 .foregroundColor(.clear)
                 .frame(height: 1)
-                .background(Color(hex: 0x2A943D))
+                .background(Color.buttonPoint)
         }
         .padding(16)
         .onAppear {
@@ -193,7 +194,7 @@ public struct CreateRoomView: View {
             Image(systemName: "checkmark.circle")
                 .resizable()
                 .frame(maxWidth: 60, maxHeight: 60)
-                .foregroundStyle(Color(hex: 0x2A943D))
+                .foregroundStyle(Color.buttonPoint)
                 .symbolEffect(.bounce, options: .repeating, value: viewStore.animationValue)
         }
         .onAppear {

@@ -12,6 +12,7 @@ import RoomDomainInterface
 import Util
 import YDS_SwiftUI
 import HomeFeatureInterface
+import DesignSystem
 
 public struct HomeView: View {
     public init(store: StoreOf<Home>) {
@@ -34,7 +35,7 @@ public struct HomeView: View {
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(maxWidth: 61, maxHeight: 61)
-                        .foregroundStyle(Color.white, Color(hex: 0x72C381))
+                        .foregroundStyle(Color.white, Color.lightGreen)
                 }
                 .padding()
                 .symbolEffect(.bounce, value: viewStore.floatingButtonAnimation)
@@ -118,21 +119,20 @@ public struct HomeView: View {
                     viewStore.send(.enterCodeButtonTapped)
                 }, label: {
                     Text("코드 입력")
-                        .frame(maxWidth: .infinity, maxHeight: 40)
-                        .foregroundStyle(Color(hex: 0x2C5F2D))
+                        .frame(maxWidth: .infinity, minHeight: 48)
+                        .foregroundStyle(Color.darkGreen)
                 })
-                .tint(Color(hex: 0x93CD99, alpha: 100))
+                .background(Color.whiteGreen)
                 Button(action: {
                     viewStore.send(.createRoomButtonTapped)
                 }, label: {
                     Text("방 개설하기")
-                        .frame(maxWidth: .infinity, maxHeight: 40)
+                        .frame(maxWidth: .infinity, minHeight: 48)
                 })
-                .foregroundStyle(Color(hex: 0xFFFFFF))
-                .tint(Color(hex: 0x2C5F2D, alpha: 100))
+                .foregroundStyle(Color.white)
+                .background(Color.darkGreen)
             }
-            .buttonStyle(.bordered)
-            .buttonBorderShape(.capsule)
+            .clipShape(.capsule)
         }
     }
     @ViewBuilder @MainActor
@@ -140,15 +140,10 @@ public struct HomeView: View {
         WithViewStore(store, observe: { $0 }) { viewStore in
             VStack(spacing: 16) {
                 TextField("코드를 입력해주세요.", text: viewStore.$text)
-                    .frame(maxWidth: .infinity, maxHeight: 40)
-                    .padding(.vertical, 8)
+                    .frame(maxWidth: .infinity, minHeight: 48)
                     .padding(.horizontal, 20)
-                    .background {
-                        Rectangle()
-                            .foregroundColor(.clear)
-                            .background(Color(hex: 0xE4E2E2))
-                            .cornerRadius(60)
-                    }
+                    .background(Color.lightGray)
+                    .clipShape(.capsule)
                 if viewStore.isActivityIndicatorVisible {
                     ProgressView()
                         .transition(.opacity)
@@ -157,12 +152,11 @@ public struct HomeView: View {
                         viewStore.send(.submitButtonTapped)
                     }, label: {
                         Text("방 입장하기")
-                            .frame(maxWidth: .infinity, maxHeight: 40)
+                            .frame(maxWidth: .infinity, minHeight: 48)
                     })
-                    .foregroundStyle(Color(hex: 0xFFFFFF))
-                    .tint(Color(hex: 0x2C5F2D, alpha: 10))
-                    .buttonStyle(.bordered)
-                    .buttonBorderShape(.capsule)
+                    .foregroundStyle(Color.white)
+                    .background(Color.darkGreen)
+                    .clipShape(.capsule)
                 }
             }
         }
@@ -187,7 +181,7 @@ public struct HomeView: View {
                                 .frame(maxWidth: 16, maxHeight: 16)
                                 .padding(8)
                                 .contentShape(Circle())
-                                .foregroundStyle(Color(hex: 0x3C3C43, alpha: 0.6))
+                                .foregroundStyle(Color.lightLabelSecondary)
                         })
                     }
                     Text("방 참여하기")

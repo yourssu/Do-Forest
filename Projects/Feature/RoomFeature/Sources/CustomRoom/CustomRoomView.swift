@@ -38,7 +38,7 @@ public struct CustomRoomView: View {
             }
         }
     }
-    @ViewBuilder
+    @ViewBuilder @MainActor
     private func participantsGroupView(viewStore: ViewStoreOf<CustomRoom>, status: Status) -> some View {
         var titleText: String {
             switch status {
@@ -94,9 +94,9 @@ public struct CustomRoomView: View {
                     Button(action: {
                         viewStore.send(.toggleExpand(status), animation: .default)
                     }, label: {
-                        Image(systemName: "triangle.fill")
+                        Image(systemName: "chevron.forward")
                             .imageScale(isExpand ? .large : .medium)
-                            .rotationEffect(isExpand ? .degrees(180) : .degrees(90))
+                            .rotationEffect(isExpand ? .degrees(0) : .degrees(90))
                             .animation(.bouncy, value: isExpand)
                             .foregroundStyle(pointColor)
                     })
@@ -106,12 +106,16 @@ public struct CustomRoomView: View {
             }
         }
     }
-    @ViewBuilder
+    @ViewBuilder @MainActor
     private func participantSuccessView(_ participant: ParticipantModel, fillColor: Color) -> some View {
         HStack {
             Text("\(participant.nickName) 성공 😎")
             Spacer()
             Text("연속 \(participant.strick)")
+        }
+        .overlay {
+            LottieViewEntry(.congratulations)
+                .frame(maxWidth: .infinity, minHeight: 70)
         }
         .font(YDSFont.body1)
         .foregroundStyle(Color.white)
