@@ -1,7 +1,7 @@
 import SwiftUI
 
 @main
-struct HomeDemo: App {
+struct ProfileDemo: App {
     var body: some Scene {
         WindowGroup {
             EmptyView()

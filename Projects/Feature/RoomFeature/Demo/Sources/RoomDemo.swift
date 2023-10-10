@@ -3,7 +3,7 @@ import RoomFeature
 import RoomFeatureInterface
 
 @main
-struct HomeDemo: App {
+struct RoomDemo: App {
     var body: some Scene {
         WindowGroup {
             CustomRoomView(store: .init(initialState: CustomRoom.State(roomModel: .default()), reducer: {
