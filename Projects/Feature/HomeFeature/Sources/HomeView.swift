@@ -211,11 +211,3 @@ public struct HomeView: View {
         }
     }
 }
-
-#Preview {
-    NavigationStack {
-        HomeView(store: Store(initialState: Home.State(), reducer: {
-            Home()
-        }))
-    }
-}

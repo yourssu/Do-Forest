@@ -16,7 +16,8 @@ let project = Project.module(
             .userInterface(target: .DesignSystem)
         ]),
         .testing(module: .feature(.HomeFeature), dependencies: [
-            .feature(target: .HomeFeature, type: .interface)
+            .feature(target: .HomeFeature, type: .interface),
+            .domain(target: .RoomDomain)
         ]),
         .tests(module: .feature(.HomeFeature), dependencies: [
             .feature(target: .HomeFeature),

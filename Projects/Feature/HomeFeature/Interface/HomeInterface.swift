@@ -14,7 +14,7 @@ public struct Home: Reducer {
         public var floatingButtonAnimation = AnimationValue()
         public var isPopupPresenting: Bool = false
         public var isEntering: Bool = false
-        public var enterRoomPopup: EnterRoomPopup.State? = .init()
+        public var enterRoomPopup: EnterRoomPopup.State?
     }
     public enum Action: Equatable {
         case loadRooms
